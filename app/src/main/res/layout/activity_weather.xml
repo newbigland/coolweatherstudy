@@ -11,31 +11,56 @@
         android:layout_height="match_parent"
         android:scaleType="centerCrop"/>
 
-    <ScrollView
-        android:id="@+id/weather_layout"
+    <!--SwipeRefreshLayout及其子控件作为天气界面的显示内容-->
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:overScrollMode="never"
-        android:scrollbars="none">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:fitsSystemWindows="true">
+            android:layout_height="match_parent">
 
-            <include layout="@layout/title"/>
+            <!--在ScrollView控件的外面嵌套上SwipeRefreshLayout，使ScrollView拥有下拉刷新功能-->
+            <ScrollView
+                android:id="@+id/weather_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                android:scrollbars="none">
 
-            <include layout="@layout/now"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"
+                    android:orientation="vertical">
 
-            <include layout="@layout/forecast"/>
+                    <include layout="@layout/title"/>
 
-            <include layout="@layout/aqi"/>
+                    <include layout="@layout/now"/>
 
-            <include layout="@layout/suggestion"/>
+                    <include layout="@layout/forecast"/>
 
-        </LinearLayout>
+                    <include layout="@layout/aqi"/>
 
-    </ScrollView>
+                    <include layout="@layout/suggestion"/>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+        <!--写成碎片是为了复用布局，将省市县数据遍历放在碎片中，碎片放在滑动菜单中-->
+        <fragment
+            android:id="@+id/choose_area_fragment"
+            android:name="com.example.cxw.coolweatherstudy.ChooseAreaFrgment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"/>
+
+    </android.support.v4.widget.DrawerLayout>
+
 
 </FrameLayout>
