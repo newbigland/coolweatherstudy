@@ -1,6 +1,7 @@
 package com.example.cxw.coolweatherstudy;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -38,7 +39,7 @@ public class ChooseAreaFrgment extends Fragment {
 
     public static final int LEVEL_PROVINCE = 0;
     public static final int LEVEL_CITY = 1;
-    public static final int LEVLE_COUNTY = 2;
+    public static final int LEVEL_COUNTY = 2;
 
     private ProgressDialog progressDialog;
     private TextView titleText;
@@ -80,6 +81,12 @@ public class ChooseAreaFrgment extends Fragment {
                 } else if (currrentLevel == LEVEL_CITY) {
                     selectedCity = cityList.get(position);
                     queryCounties();
+                }else if (currrentLevel == LEVEL_COUNTY) {
+                    String weatherId = countyList.get(position).getWeatherId();
+                    Intent intent = new Intent(getActivity(),WeatherActivity.class);
+                    intent.putExtra("weather_id",weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
@@ -87,7 +94,7 @@ public class ChooseAreaFrgment extends Fragment {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (currrentLevel == LEVLE_COUNTY) {
+                if (currrentLevel == LEVEL_COUNTY) {
                     queryCities();
                 } else if (currrentLevel == LEVEL_CITY) {
                     queryProvinces();
@@ -131,7 +138,7 @@ public class ChooseAreaFrgment extends Fragment {
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
             currrentLevel = LEVEL_CITY;
-        } else { //数据库没数据库时从服务器上查
+        } else { //数据库没数据时从服务器上查
             int provinceCode = selectedProvince.getProvinceCode();
             String address = "http://guolin.tech/api/china/" + provinceCode;
             queryFromServer(address, "city");
@@ -150,7 +157,7 @@ public class ChooseAreaFrgment extends Fragment {
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
-            currrentLevel = LEVLE_COUNTY;
+            currrentLevel = LEVEL_COUNTY;
         } else {
             int provinceCode = selectedProvince.getProvinceCode();
             int cityCode = selectedCity.getCityCode();

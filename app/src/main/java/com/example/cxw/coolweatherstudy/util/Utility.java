@@ -1,10 +1,13 @@
 package com.example.cxw.coolweatherstudy.util;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.cxw.coolweatherstudy.db.City;
 import com.example.cxw.coolweatherstudy.db.County;
 import com.example.cxw.coolweatherstudy.db.Province;
+import com.example.cxw.coolweatherstudy.gson.Weather;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -78,6 +81,20 @@ public class Utility {
             }
         }
         return false;
+    }
+
+    //将服务器返回的天气JSON数据解析成Weather实体类
+    public static Weather handleWeatherResponse(String response) {
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+            Log.d("Utility", "weatherContent : " +  weatherContent);
+            return new Gson().fromJson(weatherContent, Weather.class); //用Google gson解析json只需这一句搞定
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
