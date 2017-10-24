@@ -1,5 +1,6 @@
 package com.example.cxw.coolweatherstudy;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.cxw.coolweatherstudy.gson.Forecast;
 import com.example.cxw.coolweatherstudy.gson.Weather;
+import com.example.cxw.coolweatherstudy.service.AutoUpdateService;
 import com.example.cxw.coolweatherstudy.util.HttpUtil;
 import com.example.cxw.coolweatherstudy.util.Utility;
 
@@ -77,8 +79,8 @@ public class WeatherActivity extends AppCompatActivity {
         bingPicImg = (ImageView) findViewById(R.id.bing_pic_img);
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary); //设置下拉刷新控件的颜色
-        drawerLayout =(DrawerLayout)findViewById(R.id.drawer_layout);
-        navButton =(Button)findViewById(R.id.nav_button);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        navButton = (Button) findViewById(R.id.nav_button);
 
         //尝试从本地缓存中读取天气数据
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -156,7 +158,12 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+
+        //启动自动更新天气数据服务
+        Intent intent = new Intent(this, AutoUpdateService.class);
+        startService(intent);
     }
+
 
     //根据天气id,从服务器上请求城市天气信息
     public void requestWeather(String weatherId) {
